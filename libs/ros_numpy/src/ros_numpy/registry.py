@@ -34,10 +34,16 @@ def numpify(msg, *args, **kwargs):
 
 
 	if not conv:
-		raise ValueError("Unable to convert message {} - only supports {}".format(
-			msg.__class__.__name__,
-			', '.join(cls.__name__ + ("[]" if pl else '') for cls, pl in _to_numpy.keys())
-		))
+		for class_instance, _ in _to_numpy.keys():
+			if msg._type == class_instance._type:
+					if msg._md5sum == class_instance._md5sum:
+						conv = _to_numpy.get((class_instance, False))
+						break
+					else:
+						raise ValueError("Unable to convert message {} - only supports {}".format(
+							msg.__class__.__name__,
+							', '.join(cls.__name__ + ("[]" if pl else '') for cls, pl in _to_numpy.keys())
+						))
 
 	return conv(msg, *args, **kwargs)
 
