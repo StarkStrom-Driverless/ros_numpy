@@ -63,6 +63,7 @@ def fields_to_dtype(fields, point_step):
     '''
     offset = 0
     np_dtype_list = []
+    fields.sort(key=lambda f: f.offset)# Hint: point fields do not have to be sorted by offset.
     for f in fields:
         while offset < f.offset:
             # might be extra padding between fields
@@ -80,7 +81,7 @@ def fields_to_dtype(fields, point_step):
     while offset < point_step:
         np_dtype_list.append(('%s%d' % (DUMMY_FIELD_PREFIX, offset), np.uint8))
         offset += 1
-        
+    
     return np_dtype_list
 
 
